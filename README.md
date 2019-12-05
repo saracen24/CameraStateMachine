@@ -1,4 +1,4 @@
 # CameraStateMachine
 Camera state machine sample.
 
-![CameraStates](CameraStates.png)
+![CameraStates](other/CameraStates.png)
