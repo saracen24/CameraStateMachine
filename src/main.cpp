@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 
 #include "camera.hpp"
 
@@ -13,42 +14,44 @@ void showState(const capture::Camera& camera) {
 
 int main(void) {
   cout << "[Initial state]" << endl;
-  capture::Camera camera;
-  showState(camera);
+  unique_ptr<capture::Camera> camera = make_unique<capture::Camera>();
+  showState(*camera);
 
   cout << "[Open]" << endl;
-  camera.open();
-  showState(camera);
+  camera->open();
+  showState(*camera);
 
-  if (!camera.isReady()) {
+  if (!camera->isReady()) {
     cout << "[ERROR] Camera is not ready." << endl;
     return -1;
   }
 
   cout << "[Start]" << endl;
-  camera.start();
-  showState(camera);
+  camera->start();
+  showState(*camera);
 
-  if (!camera.isCapture()) {
+  if (!camera->isCapture()) {
     cout << "[ERROR] Capture failed." << endl;
     return -1;
   }
 
   cout << "[Pause]" << endl;
-  camera.pause();
-  showState(camera);
+  camera->pause();
+  showState(*camera);
 
   cout << "[Resume]" << endl;
-  camera.resume();
-  showState(camera);
+  camera->resume();
+  showState(*camera);
 
   cout << "[Stop]" << endl;
-  camera.stop();
-  showState(camera);
+  camera->stop();
+  showState(*camera);
 
   cout << "[Close]" << endl;
-  camera.close();
-  showState(camera);
+  camera->close();
+  showState(*camera);
+
+  camera.reset();
 
   return 0;
 }

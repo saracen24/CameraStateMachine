@@ -1,6 +1,6 @@
 #pragma once
-
-#include <iostream>
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
 
 #include "camera_state_machine.hpp"
 
@@ -9,38 +9,17 @@ namespace capture {
 class Camera : public CameraStateMachine {
  public:
   explicit Camera() = default;
-  virtual ~Camera() override final = default;
+  virtual ~Camera() override final;
 
  private:
-  virtual bool onOpen() override final {
-    std::cout << ">> Do on open ..." << std::endl;
-    return true;
-  }
-
-  virtual bool onStart() override final {
-    std::cout << ">> Do on start ..." << std::endl;
-    return true;
-  }
-
-  virtual bool onPause() override final {
-    std::cout << ">> Do on pause ..." << std::endl;
-    return true;
-  }
-
-  virtual bool onResume() override final {
-    std::cout << ">> Do on resume ..." << std::endl;
-    return true;
-  }
-
-  virtual bool onStop() override final {
-    std::cout << ">> Do on stop ..." << std::endl;
-    return true;
-  }
-
-  virtual bool onClose() override final {
-    std::cout << ">> Do on close ..." << std::endl;
-    return true;
-  }
+  virtual bool onOpen() override final;
+  virtual bool onStart() override final;
+  virtual bool onPause() override final;
+  virtual bool onResume() override final;
+  virtual bool onStop() override final;
+  virtual bool onClose() override final;
 };
 
 }  // namespace capture
+
+#endif

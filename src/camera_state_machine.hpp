@@ -17,7 +17,7 @@ namespace capture {
 class CameraStateMachine {
  public:
   explicit CameraStateMachine();
-  virtual ~CameraStateMachine() = default;
+  virtual ~CameraStateMachine();
 
   void open();
   void start();

@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -Wextra -pedantic -pedantic-errors -std=c++11
+CXXFLAGS = -Wall -Wextra -pedantic -pedantic-errors -std=c++17
 LDFLAGS =
 
 TARGET ?= csm
