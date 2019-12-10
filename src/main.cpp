@@ -4,52 +4,53 @@
 #include "camera.hpp"
 
 using namespace std;
+using namespace capture;
 
-void showState(const capture::Camera& camera) {
-  cout << "Ready: " << boolalpha << camera.isReady() << endl;
-  cout << "Capture: " << boolalpha << camera.isCapture() << endl;
-  cout << "Pause: " << boolalpha << camera.isPause() << endl;
+static const char* STATE[]{"OFF", "READY", "CAPTURE", "PAUSE"};
+
+void showState(const Camera::StateType state) {
+  cout << "State: " << boolalpha << STATE[static_cast<size_t>(state)] << endl;
   cout << endl;
 }
 
 int main() {
   cout << "[Initial state]" << endl;
-  unique_ptr<capture::Camera> camera = make_unique<capture::Camera>();
-  showState(*camera);
+  unique_ptr<Camera> camera = make_unique<Camera>();
+  showState(camera->state());
 
   cout << "[Open]" << endl;
   camera->open();
-  showState(*camera);
+  showState(camera->state());
 
-  if (!camera->isReady()) {
+  if (camera->state() != Camera::StateType::READY) {
     cout << "[ERROR] Camera is not ready." << endl;
     return -1;
   }
 
   cout << "[Start]" << endl;
   camera->start();
-  showState(*camera);
+  showState(camera->state());
 
-  if (!camera->isCapture()) {
+  if (camera->state() != Camera::StateType::CAPTURE) {
     cout << "[ERROR] Capture failed." << endl;
     return -1;
   }
 
   cout << "[Pause]" << endl;
   camera->pause();
-  showState(*camera);
+  showState(camera->state());
 
   cout << "[Resume]" << endl;
   camera->resume();
-  showState(*camera);
+  showState(camera->state());
 
   cout << "[Stop]" << endl;
   camera->stop();
-  showState(*camera);
+  showState(camera->state());
 
   cout << "[Close]" << endl;
   camera->close();
-  showState(*camera);
+  showState(camera->state());
 
   camera.reset();
 

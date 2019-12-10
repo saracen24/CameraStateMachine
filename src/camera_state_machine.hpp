@@ -9,6 +9,8 @@
 #ifndef CAMERA_STATE_MACHINE_HPP
 #define CAMERA_STATE_MACHINE_HPP
 
+#include <array>
+
 namespace capture {
 
 //!
@@ -32,17 +34,17 @@ class CameraStateMachine {
   void stop();
   void close();
 
-  [[nodiscard]] bool isReady() const noexcept;
-  [[nodiscard]] bool isCapture() const noexcept;
-  [[nodiscard]] bool isPause() const noexcept;
+  enum class StateType { OFF, READY, CAPTURE, PAUSE };
+
+  [[nodiscard]] StateType state() const noexcept;
 
  protected:
-  virtual bool onOpen() = 0;
-  virtual bool onStart() = 0;
-  virtual bool onPause() = 0;
-  virtual bool onResume() = 0;
-  virtual bool onStop() = 0;
-  virtual bool onClose() = 0;
+  [[nodiscard]] virtual bool onOpen() = 0;
+  [[nodiscard]] virtual bool onStart() = 0;
+  [[nodiscard]] virtual bool onPause() = 0;
+  [[nodiscard]] virtual bool onResume() = 0;
+  [[nodiscard]] virtual bool onStop() = 0;
+  [[nodiscard]] virtual bool onClose() = 0;
 
  private:
   //!
@@ -52,32 +54,34 @@ class CameraStateMachine {
    public:
     virtual ~State() = default;
 
-    virtual bool open(CameraStateMachine*);
-    virtual bool start(CameraStateMachine*);
-    virtual bool pause(CameraStateMachine*);
-    virtual bool resume(CameraStateMachine*);
-    virtual bool stop(CameraStateMachine*);
-    virtual bool close(CameraStateMachine*);
+    virtual void open();
+    virtual void start();
+    virtual void pause();
+    virtual void resume();
+    virtual void stop();
+    virtual void close();
 
    protected:
-    explicit State() = default;
+    explicit State(CameraStateMachine* context);
+
+    CameraStateMachine* m_csm = nullptr;
   };
 
   //!
   //! \brief Change current state.
   //! \param[in] state New state.
   //!
-  void change(State* state);
+  void change(StateType state);
 
   //!
   //! \brief Off state class.
   //!
   class Off : public State {
    public:
-    explicit Off() = default;
+    explicit Off(CameraStateMachine* csm);
     ~Off() final = default;
 
-    bool open(CameraStateMachine* csm) final;
+    void open() final;
   };
 
   //!
@@ -85,11 +89,11 @@ class CameraStateMachine {
   //!
   class Ready : public State {
    public:
-    explicit Ready() = default;
+    explicit Ready(CameraStateMachine* csm);
     ~Ready() final = default;
 
-    bool start(CameraStateMachine* csm) final;
-    bool close(CameraStateMachine* csm) final;
+    void start() final;
+    void close() final;
   };
 
   //!
@@ -97,11 +101,11 @@ class CameraStateMachine {
   //!
   class Capture : public State {
    public:
-    explicit Capture() = default;
+    explicit Capture(CameraStateMachine* csm);
     ~Capture() final = default;
 
-    bool pause(CameraStateMachine* csm) final;
-    bool stop(CameraStateMachine* csm) final;
+    void pause() final;
+    void stop() final;
   };
 
   //!
@@ -109,22 +113,15 @@ class CameraStateMachine {
   //!
   class Pause : public State {
    public:
-    explicit Pause() = default;
+    explicit Pause(CameraStateMachine* csm);
     ~Pause() final = default;
 
-    bool resume(CameraStateMachine* csm) final;
-    bool stop(CameraStateMachine* csm) final;
+    void resume() final;
+    void stop() final;
   };
 
-  //! Current state.
-  State* m_state = nullptr;
-
-  //! Ready flag.
-  bool m_isReady = false;
-  //! Capture flag.
-  bool m_isCapture = false;
-  //! Pause flag.
-  bool m_isPause = false;
+  std::array<State*, 4> m_s{nullptr};
+  StateType m_state = StateType::OFF;
 };
 
 }  // namespace capture

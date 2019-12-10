@@ -2,103 +2,94 @@
 
 namespace capture {
 
-CameraStateMachine::CameraStateMachine() : m_state(new Off()) {}
+CameraStateMachine::CameraStateMachine()
+    : m_s{new Off(this), new Ready(this), new Capture(this), new Pause(this)} {}
 
-CameraStateMachine::~CameraStateMachine() { delete m_state; }
+CameraStateMachine::~CameraStateMachine() {
+  for (const State *state : m_s) delete state;
+}
 
 void CameraStateMachine::open() {
-  if (!m_state->open(this)) return;
-  m_isReady = true;
+  m_s.at(static_cast<size_t>(m_state))->open();
 }
 
 void CameraStateMachine::start() {
-  if (!m_state->start(this)) return;
-  m_isCapture = true;
+  m_s.at(static_cast<size_t>(m_state))->start();
 }
 
 void CameraStateMachine::pause() {
-  if (!m_state->pause(this)) return;
-  m_isPause = true;
+  m_s.at(static_cast<size_t>(m_state))->pause();
 }
 
 void CameraStateMachine::resume() {
-  if (!m_state->resume(this)) return;
-  m_isPause = false;
+  m_s.at(static_cast<size_t>(m_state))->resume();
 }
 
 void CameraStateMachine::stop() {
-  if (!m_state->stop(this)) return;
-  m_isCapture = false;
+  m_s.at(static_cast<size_t>(m_state))->stop();
 }
 
 void CameraStateMachine::close() {
-  if (!m_state->close(this)) return;
-  m_isReady = false;
+  m_s.at(static_cast<size_t>(m_state))->close();
 }
 
-bool CameraStateMachine::isReady() const noexcept { return m_isReady; }
+CameraStateMachine::StateType CameraStateMachine::state() const noexcept {
+  return m_state;
+}
 
-bool CameraStateMachine::isCapture() const noexcept { return m_isCapture; }
-
-bool CameraStateMachine::isPause() const noexcept { return m_isPause; }
-
-void CameraStateMachine::change(State* state) {
-  delete m_state;
+void CameraStateMachine::change(CameraStateMachine::StateType state) {
   m_state = state;
 }
 
-bool CameraStateMachine::State::open(CameraStateMachine*) { return false; }
+void CameraStateMachine::State::open() {}
 
-bool CameraStateMachine::State::start(CameraStateMachine*) { return false; }
+void CameraStateMachine::State::start() {}
 
-bool CameraStateMachine::State::pause(CameraStateMachine*) { return false; }
+void CameraStateMachine::State::pause() {}
 
-bool CameraStateMachine::State::resume(CameraStateMachine*) { return false; }
+void CameraStateMachine::State::resume() {}
 
-bool CameraStateMachine::State::stop(CameraStateMachine*) { return false; }
+void CameraStateMachine::State::stop() {}
 
-bool CameraStateMachine::State::close(CameraStateMachine*) { return false; }
+void CameraStateMachine::State::close() {}
 
-bool CameraStateMachine::Off::open(CameraStateMachine* csm) {
-  if (!csm->onOpen()) return false;
-  csm->change(new Ready());
-  return true;
+CameraStateMachine::State::State(CameraStateMachine *context)
+    : m_csm(context) {}
+
+CameraStateMachine::Off::Off(CameraStateMachine *csm) : State(csm) {}
+
+void CameraStateMachine::Off::open() {
+  if (m_csm->onOpen()) m_csm->change(StateType::READY);
 }
 
-bool CameraStateMachine::Ready::start(CameraStateMachine* csm) {
-  if (!csm->onStart()) return false;
-  csm->change(new Capture());
-  return true;
+CameraStateMachine::Ready::Ready(CameraStateMachine *csm) : State(csm) {}
+
+void CameraStateMachine::Ready::start() {
+  if (m_csm->onStart()) m_csm->change(StateType::CAPTURE);
 }
 
-bool CameraStateMachine::Ready::close(CameraStateMachine* csm) {
-  if (!csm->onClose()) return false;
-  csm->change(new Off());
-  return true;
+void CameraStateMachine::Ready::close() {
+  if (m_csm->onClose()) m_csm->change(StateType::OFF);
 }
 
-bool CameraStateMachine::Capture::pause(CameraStateMachine* csm) {
-  if (!csm->onPause()) return false;
-  csm->change(new Pause());
-  return true;
+CameraStateMachine::Capture::Capture(CameraStateMachine *csm) : State(csm) {}
+
+void CameraStateMachine::Capture::pause() {
+  if (m_csm->onPause()) m_csm->change(StateType::PAUSE);
 }
 
-bool CameraStateMachine::Capture::stop(CameraStateMachine* csm) {
-  if (!csm->onStop()) return false;
-  csm->change(new Ready());
-  return true;
+void CameraStateMachine::Capture::stop() {
+  if (m_csm->onStop()) m_csm->change(StateType::READY);
 }
 
-bool CameraStateMachine::Pause::resume(CameraStateMachine* csm) {
-  if (!csm->onResume()) return false;
-  csm->change(new Capture());
-  return true;
+CameraStateMachine::Pause::Pause(CameraStateMachine *csm) : State(csm) {}
+
+void CameraStateMachine::Pause::resume() {
+  if (m_csm->onResume()) m_csm->change(StateType::CAPTURE);
 }
 
-bool CameraStateMachine::Pause::stop(CameraStateMachine* csm) {
-  if (!csm->onStop()) return false;
-  csm->change(new Ready());
-  return true;
+void CameraStateMachine::Pause::stop() {
+  if (m_csm->onStop()) m_csm->change(StateType::READY);
 }
 
 }  // namespace capture
