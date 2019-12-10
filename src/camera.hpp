@@ -8,16 +8,16 @@ namespace capture {
 
 class Camera : public CameraStateMachine {
  public:
-  explicit Camera() = default;
-  virtual ~Camera() override final;
+  explicit Camera() noexcept = default;
+  ~Camera() final;
 
  private:
-  virtual bool onOpen() override final;
-  virtual bool onStart() override final;
-  virtual bool onPause() override final;
-  virtual bool onResume() override final;
-  virtual bool onStop() override final;
-  virtual bool onClose() override final;
+  bool onOpen() final;
+  bool onStart() final;
+  bool onPause() final;
+  bool onResume() final;
+  bool onStop() final;
+  bool onClose() final;
 };
 
 }  // namespace capture

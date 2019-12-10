@@ -16,8 +16,13 @@ namespace capture {
 //!
 class CameraStateMachine {
  public:
-  explicit CameraStateMachine();
-  virtual ~CameraStateMachine();
+  explicit CameraStateMachine() noexcept;
+  //! NonCopyable.
+  CameraStateMachine(const CameraStateMachine&) = delete;
+  CameraStateMachine(CameraStateMachine&&) = delete;
+  CameraStateMachine& operator=(const CameraStateMachine&) = delete;
+  CameraStateMachine& operator=(CameraStateMachine&&) = delete;
+  virtual ~CameraStateMachine() noexcept;
 
   void open();
   void start();
@@ -26,9 +31,9 @@ class CameraStateMachine {
   void stop();
   void close();
 
-  bool isReady() const noexcept;
-  bool isCapture() const noexcept;
-  bool isPause() const noexcept;
+  [[nodiscard]] bool isReady() const noexcept;
+  [[nodiscard]] bool isCapture() const noexcept;
+  [[nodiscard]] bool isPause() const noexcept;
 
  protected:
   virtual bool onOpen() = 0;
@@ -39,43 +44,39 @@ class CameraStateMachine {
   virtual bool onClose() = 0;
 
  private:
-  //! NonCopiable.
-  CameraStateMachine(const CameraStateMachine&) = delete;
-  CameraStateMachine& operator=(const CameraStateMachine&) = delete;
-
   //!
   //! \brief State base class.
   //!
   class State {
    public:
-    virtual ~State() = default;
+    virtual ~State() noexcept = default;
 
-    virtual bool open(CameraStateMachine* const);
-    virtual bool start(CameraStateMachine* const);
-    virtual bool pause(CameraStateMachine* const);
-    virtual bool resume(CameraStateMachine* const);
-    virtual bool stop(CameraStateMachine* const);
-    virtual bool close(CameraStateMachine* const);
+    virtual bool open(CameraStateMachine*);
+    virtual bool start(CameraStateMachine*);
+    virtual bool pause(CameraStateMachine*);
+    virtual bool resume(CameraStateMachine*);
+    virtual bool stop(CameraStateMachine*);
+    virtual bool close(CameraStateMachine*);
 
    protected:
-    explicit State() = default;
+    explicit State() noexcept = default;
   };
 
   //!
   //! \brief Change current state.
   //! \param[in] state New state.
   //!
-  void change(State* const state);
+  void change(State* state);
 
   //!
   //! \brief Off state class.
   //!
   class Off : public State {
    public:
-    explicit Off() = default;
-    virtual ~Off() override final = default;
+    explicit Off() noexcept = default;
+    ~Off() noexcept final = default;
 
-    virtual bool open(CameraStateMachine* const csm) override final;
+    bool open(CameraStateMachine* csm) final;
   };
 
   //!
@@ -83,11 +84,11 @@ class CameraStateMachine {
   //!
   class Ready : public State {
    public:
-    explicit Ready() = default;
-    virtual ~Ready() override final = default;
+    explicit Ready() noexcept = default;
+    ~Ready() noexcept final = default;
 
-    virtual bool start(CameraStateMachine* const csm) override final;
-    virtual bool close(CameraStateMachine* const csm) override final;
+    bool start(CameraStateMachine* csm) final;
+    bool close(CameraStateMachine* csm) final;
   };
 
   //!
@@ -95,11 +96,11 @@ class CameraStateMachine {
   //!
   class Capture : public State {
    public:
-    explicit Capture() = default;
-    virtual ~Capture() override final = default;
+    explicit Capture() noexcept = default;
+    ~Capture() noexcept final = default;
 
-    virtual bool pause(CameraStateMachine* const csm) override final;
-    virtual bool stop(CameraStateMachine* const csm) override final;
+    bool pause(CameraStateMachine* csm) final;
+    bool stop(CameraStateMachine* csm) final;
   };
 
   //!
@@ -107,11 +108,11 @@ class CameraStateMachine {
   //!
   class Pause : public State {
    public:
-    explicit Pause() = default;
-    virtual ~Pause() override final = default;
+    explicit Pause() noexcept = default;
+    ~Pause() noexcept final = default;
 
-    virtual bool resume(CameraStateMachine* const csm) override final;
-    virtual bool stop(CameraStateMachine* const csm) override final;
+    bool resume(CameraStateMachine* csm) final;
+    bool stop(CameraStateMachine* csm) final;
   };
 
   //! Current state.

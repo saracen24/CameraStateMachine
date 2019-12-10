@@ -12,7 +12,7 @@ void showState(const capture::Camera& camera) {
   cout << endl;
 }
 
-int main(void) {
+int main() {
   cout << "[Initial state]" << endl;
   unique_ptr<capture::Camera> camera = make_unique<capture::Camera>();
   showState(*camera);
