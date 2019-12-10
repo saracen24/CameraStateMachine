@@ -119,9 +119,11 @@ class CameraStateMachine {
   //! Current state.
   State* m_state = nullptr;
 
-  //! State flags.
+  //! Ready flag.
   bool m_isReady = false;
+  //! Capture flag.
   bool m_isCapture = false;
+  //! Pause flag.
   bool m_isPause = false;
 };
 
