@@ -17,12 +17,13 @@ namespace capture {
 class CameraStateMachine {
  public:
   explicit CameraStateMachine();
+  virtual ~CameraStateMachine();
+
   //! NonCopyable.
   CameraStateMachine(const CameraStateMachine&) = delete;
   CameraStateMachine(CameraStateMachine&&) = delete;
   CameraStateMachine& operator=(const CameraStateMachine&) = delete;
   CameraStateMachine& operator=(CameraStateMachine&&) = delete;
-  virtual ~CameraStateMachine();
 
   void open();
   void start();
@@ -116,8 +117,9 @@ class CameraStateMachine {
   };
 
   //! Current state.
-  State* m_state;
+  State* m_state = nullptr;
 
+  //! State flags.
   bool m_isReady = false;
   bool m_isCapture = false;
   bool m_isPause = false;
