@@ -27,6 +27,9 @@ class CameraStateMachine {
   CameraStateMachine& operator=(const CameraStateMachine&) = delete;
   CameraStateMachine& operator=(CameraStateMachine&&) = delete;
 
+  //! State types.
+  enum class StateType { OFF, READY, CAPTURE, PAUSE };
+
   void open();
   void start();
   void pause();
@@ -34,8 +37,10 @@ class CameraStateMachine {
   void stop();
   void close();
 
-  enum class StateType { OFF, READY, CAPTURE, PAUSE };
-
+  //!
+  //! \brief Get current state.
+  //! \return StateType.
+  //!
   [[nodiscard]] StateType state() const noexcept;
 
  protected:
@@ -62,16 +67,15 @@ class CameraStateMachine {
     virtual void close();
 
    protected:
-    explicit State(CameraStateMachine* context);
+    //!
+    //! \brief State class constructor.
+    //! \param[in] csm Context CameraStateMachine.
+    //!
+    explicit State(CameraStateMachine* csm);
 
+    //! Context CameraStateMachine.
     CameraStateMachine* m_csm = nullptr;
   };
-
-  //!
-  //! \brief Change current state.
-  //! \param[in] state New state.
-  //!
-  void change(StateType state);
 
   //!
   //! \brief Off state class.
@@ -120,7 +124,15 @@ class CameraStateMachine {
     void stop() final;
   };
 
+  //!
+  //! \brief Change current state.
+  //! \param state New state.
+  //!
+  void change(StateType state);
+
+  //! Array of state instances.
   std::array<State*, 4> m_s{nullptr};
+  //! Current state.
   StateType m_state = StateType::OFF;
 };
 

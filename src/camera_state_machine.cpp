@@ -53,8 +53,7 @@ void CameraStateMachine::State::stop() {}
 
 void CameraStateMachine::State::close() {}
 
-CameraStateMachine::State::State(CameraStateMachine *context)
-    : m_csm(context) {}
+CameraStateMachine::State::State(CameraStateMachine *csm) : m_csm(csm) {}
 
 CameraStateMachine::Off::Off(CameraStateMachine *csm) : State(csm) {}
 
