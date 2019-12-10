@@ -2,9 +2,9 @@
 
 namespace capture {
 
-CameraStateMachine::CameraStateMachine() noexcept : m_state(new Off()) {}
+CameraStateMachine::CameraStateMachine() : m_state(new Off()) {}
 
-CameraStateMachine::~CameraStateMachine() noexcept { delete m_state; }
+CameraStateMachine::~CameraStateMachine() { delete m_state; }
 
 void CameraStateMachine::open() {
   if (!m_state->open(this)) return;

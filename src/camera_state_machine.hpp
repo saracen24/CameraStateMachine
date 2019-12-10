@@ -16,13 +16,13 @@ namespace capture {
 //!
 class CameraStateMachine {
  public:
-  explicit CameraStateMachine() noexcept;
+  explicit CameraStateMachine();
   //! NonCopyable.
   CameraStateMachine(const CameraStateMachine&) = delete;
   CameraStateMachine(CameraStateMachine&&) = delete;
   CameraStateMachine& operator=(const CameraStateMachine&) = delete;
   CameraStateMachine& operator=(CameraStateMachine&&) = delete;
-  virtual ~CameraStateMachine() noexcept;
+  virtual ~CameraStateMachine();
 
   void open();
   void start();
@@ -49,7 +49,7 @@ class CameraStateMachine {
   //!
   class State {
    public:
-    virtual ~State() noexcept = default;
+    virtual ~State() = default;
 
     virtual bool open(CameraStateMachine*);
     virtual bool start(CameraStateMachine*);
@@ -59,7 +59,7 @@ class CameraStateMachine {
     virtual bool close(CameraStateMachine*);
 
    protected:
-    explicit State() noexcept = default;
+    explicit State() = default;
   };
 
   //!
@@ -73,8 +73,8 @@ class CameraStateMachine {
   //!
   class Off : public State {
    public:
-    explicit Off() noexcept = default;
-    ~Off() noexcept final = default;
+    explicit Off() = default;
+    ~Off() final = default;
 
     bool open(CameraStateMachine* csm) final;
   };
@@ -84,8 +84,8 @@ class CameraStateMachine {
   //!
   class Ready : public State {
    public:
-    explicit Ready() noexcept = default;
-    ~Ready() noexcept final = default;
+    explicit Ready() = default;
+    ~Ready() final = default;
 
     bool start(CameraStateMachine* csm) final;
     bool close(CameraStateMachine* csm) final;
@@ -96,8 +96,8 @@ class CameraStateMachine {
   //!
   class Capture : public State {
    public:
-    explicit Capture() noexcept = default;
-    ~Capture() noexcept final = default;
+    explicit Capture() = default;
+    ~Capture() final = default;
 
     bool pause(CameraStateMachine* csm) final;
     bool stop(CameraStateMachine* csm) final;
@@ -108,8 +108,8 @@ class CameraStateMachine {
   //!
   class Pause : public State {
    public:
-    explicit Pause() noexcept = default;
-    ~Pause() noexcept final = default;
+    explicit Pause() = default;
+    ~Pause() final = default;
 
     bool resume(CameraStateMachine* csm) final;
     bool stop(CameraStateMachine* csm) final;

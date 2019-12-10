@@ -8,7 +8,7 @@ namespace capture {
 
 class Camera : public CameraStateMachine {
  public:
-  explicit Camera() noexcept = default;
+  explicit Camera() = default;
   ~Camera() final;
 
  private:
