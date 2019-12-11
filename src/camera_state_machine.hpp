@@ -23,8 +23,9 @@ class CameraStateMachine {
 
   //! NonCopyable.
   CameraStateMachine(const CameraStateMachine&) = delete;
-  CameraStateMachine(CameraStateMachine&&) = delete;
   CameraStateMachine& operator=(const CameraStateMachine&) = delete;
+  //! NonMovable.
+  CameraStateMachine(CameraStateMachine&&) = delete;
   CameraStateMachine& operator=(CameraStateMachine&&) = delete;
 
   //! State types.
@@ -61,8 +62,9 @@ class CameraStateMachine {
 
     //! NonCopyable.
     State(const State&) = delete;
-    State(State&&) = delete;
     State& operator=(const State&) = delete;
+    //! NonMovable.
+    State(State&&) = delete;
     State& operator=(State&&) = delete;
 
     virtual void open();

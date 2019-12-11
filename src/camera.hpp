@@ -13,8 +13,9 @@ class Camera : public CameraStateMachine {
 
   //! NonCopyable.
   Camera(const Camera&) = delete;
-  Camera(Camera&&) = delete;
   Camera& operator=(const Camera&) = delete;
+  //! NonMovable.
+  Camera(Camera&&) = delete;
   Camera& operator=(Camera&&) = delete;
 
  private:
