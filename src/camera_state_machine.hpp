@@ -59,6 +59,12 @@ class CameraStateMachine {
    public:
     virtual ~State() = default;
 
+    //! NonCopyable.
+    State(const State&) = delete;
+    State(State&&) = delete;
+    State& operator=(const State&) = delete;
+    State& operator=(State&&) = delete;
+
     virtual void open();
     virtual void start();
     virtual void pause();
@@ -73,6 +79,13 @@ class CameraStateMachine {
     //!
     explicit State(CameraStateMachine* csm);
 
+    //!
+    //! \brief Get context.
+    //! \return CameraStateMachine pointer.
+    //!
+    [[nodiscard]] CameraStateMachine* context() const noexcept;
+
+   private:
     //! Context CameraStateMachine.
     CameraStateMachine* m_csm = nullptr;
   };
@@ -83,7 +96,6 @@ class CameraStateMachine {
   class Off : public State {
    public:
     explicit Off(CameraStateMachine* csm);
-    ~Off() final = default;
 
     void open() final;
   };
@@ -94,7 +106,6 @@ class CameraStateMachine {
   class Ready : public State {
    public:
     explicit Ready(CameraStateMachine* csm);
-    ~Ready() final = default;
 
     void start() final;
     void close() final;
@@ -106,7 +117,6 @@ class CameraStateMachine {
   class Capture : public State {
    public:
     explicit Capture(CameraStateMachine* csm);
-    ~Capture() final = default;
 
     void pause() final;
     void stop() final;
@@ -118,7 +128,6 @@ class CameraStateMachine {
   class Pause : public State {
    public:
     explicit Pause(CameraStateMachine* csm);
-    ~Pause() final = default;
 
     void resume() final;
     void stop() final;

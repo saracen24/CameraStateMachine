@@ -11,6 +11,12 @@ class Camera : public CameraStateMachine {
   explicit Camera() = default;
   ~Camera() final;
 
+  //! NonCopyable.
+  Camera(const Camera&) = delete;
+  Camera(Camera&&) = delete;
+  Camera& operator=(const Camera&) = delete;
+  Camera& operator=(Camera&&) = delete;
+
  private:
   bool onOpen() final;
   bool onStart() final;

@@ -6,11 +6,11 @@
 using namespace std;
 using namespace capture;
 
-static const char* STATE[]{"OFF", "READY", "CAPTURE", "PAUSE"};
+static const array<const char*, 4> STATE{"OFF", "READY", "CAPTURE", "PAUSE"};
 
 void showState(const Camera::StateType state) {
-  cout << "State: " << boolalpha << STATE[static_cast<size_t>(state)] << endl;
-  cout << endl;
+  cout << "State: " << boolalpha << STATE.at(static_cast<size_t>(state)) << endl
+       << endl;
 }
 
 int main() {
