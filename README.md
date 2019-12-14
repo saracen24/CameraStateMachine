@@ -1,4 +1,8 @@
 # CameraStateMachine
 Camera state machine sample.
 
-![CameraStates](other/CameraStates.png)
+## Camera states
+![CameraStates](other/CameraStates.png){:height="50%" width="50%"}
+
+## Class UML diagram
+![ClassDiagram](other/ClassDiagram.png)
