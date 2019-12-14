@@ -8,7 +8,7 @@ using namespace capture;
 
 static const array<const char*, 4> STATE{"OFF", "READY", "CAPTURE", "PAUSE"};
 
-void showState(const Camera::StateType state) {
+void showState(const Camera::State state) {
   cout << "State: " << boolalpha << STATE.at(static_cast<size_t>(state)) << endl
        << endl;
 }
@@ -22,7 +22,7 @@ int main() {
   camera->open();
   showState(camera->state());
 
-  if (camera->state() != Camera::StateType::READY) {
+  if (camera->state() != Camera::State::READY) {
     cout << "[ERROR] Camera is not ready." << endl;
     return -1;
   }
@@ -31,7 +31,7 @@ int main() {
   camera->start();
   showState(camera->state());
 
-  if (camera->state() != Camera::StateType::CAPTURE) {
+  if (camera->state() != Camera::State::CAPTURE) {
     cout << "[ERROR] Capture failed." << endl;
     return -1;
   }

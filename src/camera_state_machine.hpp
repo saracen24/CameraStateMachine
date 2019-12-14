@@ -29,7 +29,7 @@ class CameraStateMachine {
   CameraStateMachine& operator=(CameraStateMachine&&) = delete;
 
   //! State types.
-  enum class StateType { OFF, READY, CAPTURE, PAUSE };
+  enum class State { OFF, READY, CAPTURE, PAUSE };
 
   void open();
   void start();
@@ -40,9 +40,9 @@ class CameraStateMachine {
 
   //!
   //! \brief Get current state.
-  //! \return StateType.
+  //! \return State type.
   //!
-  [[nodiscard]] StateType state() const noexcept;
+  [[nodiscard]] State state() const noexcept;
 
  protected:
   [[nodiscard]] virtual bool onOpen() = 0;
@@ -54,18 +54,18 @@ class CameraStateMachine {
 
  private:
   //!
-  //! \brief State base class.
+  //! \brief Base state class.
   //!
-  class State {
+  class BaseState {
    public:
-    virtual ~State() = default;
+    virtual ~BaseState() = default;
 
     //! NonCopyable.
-    State(const State&) = delete;
-    State& operator=(const State&) = delete;
+    BaseState(const BaseState&) = delete;
+    BaseState& operator=(const BaseState&) = delete;
     //! NonMovable.
-    State(State&&) = delete;
-    State& operator=(State&&) = delete;
+    BaseState(BaseState&&) = delete;
+    BaseState& operator=(BaseState&&) = delete;
 
     virtual void open();
     virtual void start();
@@ -79,7 +79,7 @@ class CameraStateMachine {
     //! \brief State class constructor.
     //! \param[in] csm Context CameraStateMachine.
     //!
-    explicit State(CameraStateMachine* csm);
+    explicit BaseState(CameraStateMachine* csm);
 
     //!
     //! \brief Get context.
@@ -95,7 +95,7 @@ class CameraStateMachine {
   //!
   //! \brief Off state class.
   //!
-  class Off : public State {
+  class Off : public BaseState {
    public:
     explicit Off(CameraStateMachine* csm);
 
@@ -105,7 +105,7 @@ class CameraStateMachine {
   //!
   //! \brief Ready state class.
   //!
-  class Ready : public State {
+  class Ready : public BaseState {
    public:
     explicit Ready(CameraStateMachine* csm);
 
@@ -116,7 +116,7 @@ class CameraStateMachine {
   //!
   //! \brief Capture state class.
   //!
-  class Capture : public State {
+  class Capture : public BaseState {
    public:
     explicit Capture(CameraStateMachine* csm);
 
@@ -127,7 +127,7 @@ class CameraStateMachine {
   //!
   //! \brief Pause state class.
   //!
-  class Pause : public State {
+  class Pause : public BaseState {
    public:
     explicit Pause(CameraStateMachine* csm);
 
@@ -139,12 +139,12 @@ class CameraStateMachine {
   //! \brief Change current state.
   //! \param state New state.
   //!
-  void change(StateType state);
+  void change(State state);
 
   //! Array of state instances.
-  std::array<State*, 4> m_s{nullptr};
+  std::array<BaseState*, 4> m_s{nullptr};
   //! Current state.
-  StateType m_state = StateType::OFF;
+  State m_state = State::OFF;
 };
 
 }  // namespace capture
