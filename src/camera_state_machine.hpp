@@ -76,7 +76,7 @@ class CameraStateMachine {
 
    protected:
     //!
-    //! \brief State class constructor.
+    //! \brief BaseState class constructor.
     //! \param[in] csm Context CameraStateMachine.
     //!
     explicit BaseState(CameraStateMachine* csm);
