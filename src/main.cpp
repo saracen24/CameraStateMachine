@@ -4,12 +4,12 @@
 #include "camera.hpp"
 
 using namespace std;
-using namespace capture;
+using namespace aiz::capture;
 
-static const array<const char*, 4> STATE{"OFF", "READY", "CAPTURE", "PAUSE"};
+static const array<const char*, 4> kState{"OFF", "READY", "CAPTURE", "PAUSE"};
 
 void showState(const Camera::State state) {
-  cout << "State: " << boolalpha << STATE.at(static_cast<size_t>(state)) << endl
+  cout << "State: " << boolalpha << kState.at(static_cast<size_t>(state)) << endl
        << endl;
 }
 

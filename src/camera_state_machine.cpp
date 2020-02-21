@@ -1,43 +1,42 @@
 #include "camera_state_machine.hpp"
 
-namespace capture {
+using namespace std;
 
-CameraStateMachine::CameraStateMachine()
-    : m_s{new Off(this), new Ready(this), new Capture(this), new Pause(this)} {}
+namespace aiz::capture {
 
 CameraStateMachine::~CameraStateMachine() {
-  for (const BaseState *state : m_s) delete state;
+  for (const BaseState* state : kInstance) delete state;
 }
 
 void CameraStateMachine::open() {
-  m_s.at(static_cast<size_t>(m_state))->open();
+  kInstance.at(static_cast<size_t>(mState))->open();
 }
 
 void CameraStateMachine::start() {
-  m_s.at(static_cast<size_t>(m_state))->start();
+  kInstance.at(static_cast<size_t>(mState))->start();
 }
 
 void CameraStateMachine::pause() {
-  m_s.at(static_cast<size_t>(m_state))->pause();
+  kInstance.at(static_cast<size_t>(mState))->pause();
 }
 
 void CameraStateMachine::resume() {
-  m_s.at(static_cast<size_t>(m_state))->resume();
+  kInstance.at(static_cast<size_t>(mState))->resume();
 }
 
 void CameraStateMachine::stop() {
-  m_s.at(static_cast<size_t>(m_state))->stop();
+  kInstance.at(static_cast<size_t>(mState))->stop();
 }
 
 void CameraStateMachine::close() {
-  m_s.at(static_cast<size_t>(m_state))->close();
+  kInstance.at(static_cast<size_t>(mState))->close();
 }
 
 CameraStateMachine::State CameraStateMachine::state() const noexcept {
-  return m_state;
+  return mState;
 }
 
-void CameraStateMachine::change(State state) { m_state = state; }
+void CameraStateMachine::change(State state) { mState = state; }
 
 void CameraStateMachine::BaseState::open() {}
 
@@ -51,55 +50,54 @@ void CameraStateMachine::BaseState::stop() {}
 
 void CameraStateMachine::BaseState::close() {}
 
-CameraStateMachine *CameraStateMachine::BaseState::context() const noexcept {
-  return m_csm;
+CameraStateMachine* CameraStateMachine::BaseState::context() const noexcept {
+  return mCsm;
 }
 
-CameraStateMachine::BaseState::BaseState(CameraStateMachine *csm)
-    : m_csm(csm) {}
+CameraStateMachine::BaseState::BaseState(CameraStateMachine* csm) : mCsm(csm) {}
 
-CameraStateMachine::Off::Off(CameraStateMachine *csm) : BaseState(csm) {}
+CameraStateMachine::Off::Off(CameraStateMachine* csm) : BaseState(csm) {}
 
 void CameraStateMachine::Off::open() {
-  CameraStateMachine *csm = context();
+  CameraStateMachine* csm = context();
   if (csm->onOpen()) csm->change(State::READY);
 }
 
-CameraStateMachine::Ready::Ready(CameraStateMachine *csm) : BaseState(csm) {}
+CameraStateMachine::Ready::Ready(CameraStateMachine* csm) : BaseState(csm) {}
 
 void CameraStateMachine::Ready::start() {
-  CameraStateMachine *csm = context();
+  CameraStateMachine* csm = context();
   if (csm->onStart()) csm->change(State::CAPTURE);
 }
 
 void CameraStateMachine::Ready::close() {
-  CameraStateMachine *csm = context();
+  CameraStateMachine* csm = context();
   if (csm->onClose()) csm->change(State::OFF);
 }
 
-CameraStateMachine::Capture::Capture(CameraStateMachine *csm)
+CameraStateMachine::Capture::Capture(CameraStateMachine* csm)
     : BaseState(csm) {}
 
 void CameraStateMachine::Capture::pause() {
-  CameraStateMachine *csm = context();
+  CameraStateMachine* csm = context();
   if (csm->onPause()) csm->change(State::PAUSE);
 }
 
 void CameraStateMachine::Capture::stop() {
-  CameraStateMachine *csm = context();
+  CameraStateMachine* csm = context();
   if (csm->onStop()) csm->change(State::READY);
 }
 
-CameraStateMachine::Pause::Pause(CameraStateMachine *csm) : BaseState(csm) {}
+CameraStateMachine::Pause::Pause(CameraStateMachine* csm) : BaseState(csm) {}
 
 void CameraStateMachine::Pause::resume() {
-  CameraStateMachine *csm = context();
+  CameraStateMachine* csm = context();
   if (csm->onResume()) csm->change(State::CAPTURE);
 }
 
 void CameraStateMachine::Pause::stop() {
-  CameraStateMachine *csm = context();
+  CameraStateMachine* csm = context();
   if (csm->onStop()) csm->change(State::READY);
 }
 
-}  // namespace capture
+}  // namespace aiz::capture

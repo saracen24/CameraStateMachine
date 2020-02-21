@@ -1,24 +1,21 @@
-//!
-//! \file camera_state_machine.hpp.
-//! \brief Camera state machine.
-//! \author Aiz (c).
-//! \date 2019.
-//!
-
+/*!
+ * \file camera_state_machine.hpp.
+ * \brief Camera state machine.
+ * \author Aiz (c).
+ * \date 2020.
+ */
 #pragma once
-#ifndef CAMERA_STATE_MACHINE_HPP
-#define CAMERA_STATE_MACHINE_HPP
 
 #include <array>
 
-namespace capture {
+namespace aiz::capture {
 
-//!
-//! \brief CameraStateMachine class.
-//!
+/*!
+ * \brief CameraStateMachine class.
+ */
 class CameraStateMachine {
  public:
-  explicit CameraStateMachine();
+  explicit CameraStateMachine() = default;
   virtual ~CameraStateMachine();
 
   //! NonCopyable.
@@ -38,13 +35,13 @@ class CameraStateMachine {
   void stop();
   void close();
 
-  //!
-  //! \brief Get current state.
-  //! \return State type.
-  //!
+  /*!
+   * \brief Get current state.
+   * \return State type.
+   */
   [[nodiscard]] State state() const noexcept;
 
- protected:
+ private:
   [[nodiscard]] virtual bool onOpen() = 0;
   [[nodiscard]] virtual bool onStart() = 0;
   [[nodiscard]] virtual bool onPause() = 0;
@@ -52,10 +49,9 @@ class CameraStateMachine {
   [[nodiscard]] virtual bool onStop() = 0;
   [[nodiscard]] virtual bool onClose() = 0;
 
- private:
-  //!
-  //! \brief Base state class.
-  //!
+  /*!
+   * \brief Base state class.
+   */
   class BaseState {
    public:
     virtual ~BaseState() = default;
@@ -75,26 +71,26 @@ class CameraStateMachine {
     virtual void close();
 
    protected:
-    //!
-    //! \brief BaseState class constructor.
-    //! \param[in] csm Context CameraStateMachine.
-    //!
+    /*!
+     * \brief BaseState class constructor.
+     * \param[in] csm Context CameraStateMachine.
+     */
     explicit BaseState(CameraStateMachine* csm);
 
-    //!
-    //! \brief Get context.
-    //! \return CameraStateMachine pointer.
-    //!
+    /*!
+     * \brief Get context.
+     * \return CameraStateMachine pointer.
+     */
     [[nodiscard]] CameraStateMachine* context() const noexcept;
 
    private:
     //! Context CameraStateMachine.
-    CameraStateMachine* m_csm = nullptr;
+    CameraStateMachine* mCsm = nullptr;
   };
 
-  //!
-  //! \brief Off state class.
-  //!
+  /*!
+   * \brief Off state class.
+   */
   class Off : public BaseState {
    public:
     explicit Off(CameraStateMachine* csm);
@@ -102,9 +98,9 @@ class CameraStateMachine {
     void open() final;
   };
 
-  //!
-  //! \brief Ready state class.
-  //!
+  /*!
+   * \brief Ready state class.
+   */
   class Ready : public BaseState {
    public:
     explicit Ready(CameraStateMachine* csm);
@@ -113,9 +109,9 @@ class CameraStateMachine {
     void close() final;
   };
 
-  //!
-  //! \brief Capture state class.
-  //!
+  /*!
+   * \brief Capture state class.
+   */
   class Capture : public BaseState {
    public:
     explicit Capture(CameraStateMachine* csm);
@@ -124,9 +120,9 @@ class CameraStateMachine {
     void stop() final;
   };
 
-  //!
-  //! \brief Pause state class.
-  //!
+  /*!
+   * \brief Pause state class.
+   */
   class Pause : public BaseState {
    public:
     explicit Pause(CameraStateMachine* csm);
@@ -135,18 +131,17 @@ class CameraStateMachine {
     void stop() final;
   };
 
-  //!
-  //! \brief Change current state.
-  //! \param state New state.
-  //!
+  /*!
+   * \brief Change current state.
+   * \param state New state.
+   */
   void change(State state);
 
   //! Array of state instances.
-  std::array<BaseState*, 4> m_s{nullptr};
+  const std::array<BaseState*, 4> kInstance{new Off(this), new Ready(this),
+                                            new Capture(this), new Pause(this)};
   //! Current state.
-  State m_state = State::OFF;
+  State mState = State::OFF;
 };
 
-}  // namespace capture
-
-#endif
+}  // namespace aiz::capture

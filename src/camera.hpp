@@ -4,7 +4,7 @@
 
 #include "camera_state_machine.hpp"
 
-namespace capture {
+namespace aiz::capture {
 
 class Camera : public CameraStateMachine {
  public:
@@ -27,6 +27,6 @@ class Camera : public CameraStateMachine {
   bool onClose() final;
 };
 
-}  // namespace capture
+}  // namespace aiz::capture
 
 #endif

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-namespace capture {
+namespace aiz::capture {
 
 Camera::~Camera() {
   stop();
@@ -41,4 +41,4 @@ bool Camera::onClose() {
   return true;
 }
 
-}  // namespace capture
+}  // namespace aiz::capture
