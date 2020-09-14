@@ -2,35 +2,23 @@
 
 using namespace std;
 
-namespace aiz::capture {
+namespace aiz {
 
 CameraStateMachine::~CameraStateMachine() {
   for (const BaseState* state : kInstance) delete state;
 }
 
-void CameraStateMachine::open() {
-  kInstance.at(static_cast<size_t>(mState))->open();
-}
+void CameraStateMachine::open() { kInstance.at(mState)->open(); }
 
-void CameraStateMachine::start() {
-  kInstance.at(static_cast<size_t>(mState))->start();
-}
+void CameraStateMachine::start() { kInstance.at(mState)->start(); }
 
-void CameraStateMachine::pause() {
-  kInstance.at(static_cast<size_t>(mState))->pause();
-}
+void CameraStateMachine::pause() { kInstance.at(mState)->pause(); }
 
-void CameraStateMachine::resume() {
-  kInstance.at(static_cast<size_t>(mState))->resume();
-}
+void CameraStateMachine::resume() { kInstance.at(mState)->resume(); }
 
-void CameraStateMachine::stop() {
-  kInstance.at(static_cast<size_t>(mState))->stop();
-}
+void CameraStateMachine::stop() { kInstance.at(mState)->stop(); }
 
-void CameraStateMachine::close() {
-  kInstance.at(static_cast<size_t>(mState))->close();
-}
+void CameraStateMachine::close() { kInstance.at(mState)->close(); }
 
 CameraStateMachine::State CameraStateMachine::state() const noexcept {
   return mState;
@@ -100,4 +88,4 @@ void CameraStateMachine::Pause::stop() {
   if (csm->onStop()) csm->change(State::READY);
 }
 
-}  // namespace aiz::capture
+}  // namespace aiz

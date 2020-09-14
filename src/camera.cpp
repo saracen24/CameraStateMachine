@@ -4,12 +4,7 @@
 
 using namespace std;
 
-namespace aiz::capture {
-
-Camera::~Camera() {
-  stop();
-  close();
-}
+namespace aiz {
 
 bool Camera::onOpen() {
   cout << ">> Do on open ..." << endl;
@@ -41,4 +36,4 @@ bool Camera::onClose() {
   return true;
 }
 
-}  // namespace aiz::capture
+}  // namespace aiz

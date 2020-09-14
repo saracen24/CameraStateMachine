@@ -8,7 +8,7 @@
 
 #include <array>
 
-namespace aiz::capture {
+namespace aiz {
 
 /*!
  * \brief CameraStateMachine class.
@@ -26,7 +26,7 @@ class CameraStateMachine {
   CameraStateMachine& operator=(CameraStateMachine&&) = delete;
 
   //! State types.
-  enum class State { OFF, READY, CAPTURE, PAUSE };
+  enum State : unsigned int { OFF, READY, CAPTURE, PAUSE };
 
   void open();
   void start();
@@ -91,44 +91,44 @@ class CameraStateMachine {
   /*!
    * \brief Off state class.
    */
-  class Off : public BaseState {
+  class Off final : public BaseState {
    public:
     explicit Off(CameraStateMachine* csm);
 
-    void open() final;
+    void open() override;
   };
 
   /*!
    * \brief Ready state class.
    */
-  class Ready : public BaseState {
+  class Ready final : public BaseState {
    public:
     explicit Ready(CameraStateMachine* csm);
 
-    void start() final;
-    void close() final;
+    void start() override;
+    void close() override;
   };
 
   /*!
    * \brief Capture state class.
    */
-  class Capture : public BaseState {
+  class Capture final : public BaseState {
    public:
     explicit Capture(CameraStateMachine* csm);
 
-    void pause() final;
-    void stop() final;
+    void pause() override;
+    void stop() override;
   };
 
   /*!
    * \brief Pause state class.
    */
-  class Pause : public BaseState {
+  class Pause final : public BaseState {
    public:
     explicit Pause(CameraStateMachine* csm);
 
-    void resume() final;
-    void stop() final;
+    void resume() override;
+    void stop() override;
   };
 
   /*!
@@ -144,4 +144,4 @@ class CameraStateMachine {
   State mState = State::OFF;
 };
 
-}  // namespace aiz::capture
+}  // namespace aiz

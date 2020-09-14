@@ -1,15 +1,13 @@
 #pragma once
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
 
 #include "camera_state_machine.hpp"
 
-namespace aiz::capture {
+namespace aiz {
 
-class Camera : public CameraStateMachine {
+class Camera final : public CameraStateMachine {
  public:
   explicit Camera() = default;
-  ~Camera() final;
+  ~Camera() override = default;
 
   //! NonCopyable.
   Camera(const Camera&) = delete;
@@ -19,14 +17,12 @@ class Camera : public CameraStateMachine {
   Camera& operator=(Camera&&) = delete;
 
  private:
-  bool onOpen() final;
-  bool onStart() final;
-  bool onPause() final;
-  bool onResume() final;
-  bool onStop() final;
-  bool onClose() final;
+  bool onOpen() override;
+  bool onStart() override;
+  bool onPause() override;
+  bool onResume() override;
+  bool onStop() override;
+  bool onClose() override;
 };
 
-}  // namespace aiz::capture
-
-#endif
+}  // namespace aiz

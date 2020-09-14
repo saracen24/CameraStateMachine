@@ -31,5 +31,13 @@
 *.out
 *.app
 
+# QtCreator
+CMakeLists.txt.user
+
 # Build directories
+.vs/*
 build/*
+out/*
+
+# Exclude from ignore
+!cmake/**

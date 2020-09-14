@@ -4,13 +4,12 @@
 #include "camera.hpp"
 
 using namespace std;
-using namespace aiz::capture;
+using namespace aiz;
 
 static const array<const char*, 4> kState{"OFF", "READY", "CAPTURE", "PAUSE"};
 
-void showState(const Camera::State state) {
-  cout << "State: " << boolalpha << kState.at(static_cast<size_t>(state)) << endl
-       << endl;
+void showState(Camera::State state) {
+  cout << "State: " << kState.at(state) << endl << endl;
 }
 
 int main() {
@@ -24,7 +23,7 @@ int main() {
 
   if (camera->state() != Camera::State::READY) {
     cout << "[ERROR] Camera is not ready." << endl;
-    return -1;
+    return EXIT_FAILURE;
   }
 
   cout << "[Start]" << endl;
@@ -33,7 +32,7 @@ int main() {
 
   if (camera->state() != Camera::State::CAPTURE) {
     cout << "[ERROR] Capture failed." << endl;
-    return -1;
+    return EXIT_FAILURE;
   }
 
   cout << "[Pause]" << endl;
@@ -54,5 +53,5 @@ int main() {
 
   camera.reset();
 
-  return 0;
+  return EXIT_SUCCESS;
 }
